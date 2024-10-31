@@ -1,19 +1,29 @@
 const express = require("express");
-const dbConnect = require("./src/utils/config/dataBase");
+const dbConnect = require("./src/config/dataBase");
+const bcrypt = require("bcrypt");
 const app = express();
 const UserModel = require("./src/models/user.model");
+const { signUpValidator } = require("./src/utils/signUpValidator");
 
 const port = 3000;
 // middleware to parse Json
 app.use(express.json());
-3;
 app.post("/signup", async (req, res) => {
   try {
-    const user = new UserModel(req.body);
+    const { firstName, lastName, emailId, age, password } = req.body;
+    signUpValidator(req.body);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new UserModel({
+      firstName,
+      lastName,
+      emailId,
+      age,
+      password: hashedPassword,
+    });
     await user.save();
     res.status(200).send("User Signup successfully");
   } catch (error) {
-    res.status(500).send("Internal error");
+    res.status(500).send("Error : " + error.message);
   }
 });
 // fetch user by email

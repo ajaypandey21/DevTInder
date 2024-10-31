@@ -16,7 +16,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       validate(value) {
-        if (validator.isStrongPassword(value)) {
+        if (!validator.isStrongPassword(value)) {
           throw new Error("Password is not strong" + value);
         }
       },
@@ -28,8 +28,8 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
       validate(value) {
-        if (validator.isEmail(value)) {
-          throw new Error("Email is not valid" + value);
+        if (!validator.isEmail(value)) {
+          throw new Error(`${value} is not valid `);
         }
       },
     },
@@ -49,7 +49,7 @@ const userSchema = new Schema(
       type: String,
       default: "https://geographyandyou.com/images/user-profile.png",
       validate(value) {
-        if (validator.isURL(value)) {
+        if (!validator.isURL(value)) {
           throw new Error("PhotoURL is not Valid" + value);
         }
       },
