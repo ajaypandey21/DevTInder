@@ -4,7 +4,6 @@ var jwt = require("jsonwebtoken");
 const userAuth = async (req, res, next) => {
   try {
     const { token } = req.cookies;
-    console.log("tok", token);
     if (!token) {
       throw new Error("Invalid Token!");
     } else {
