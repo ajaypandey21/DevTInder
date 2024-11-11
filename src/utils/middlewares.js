@@ -1,4 +1,4 @@
-const userModel = require("../models/user.model");
+const UserModel = require("../models/user.model");
 var jwt = require("jsonwebtoken");
 
 const userAuth = async (req, res, next) => {
@@ -10,7 +10,7 @@ const userAuth = async (req, res, next) => {
       const decodedObj = await jwt.verify(token, "JwtSecretKey1234", {
         expiresIn: "1h",
       });
-      const user = await userModel.findById(decodedObj.id);
+      const user = await UserModel.findById(decodedObj.id);
       req.user = user;
       next();
     }
