@@ -1,5 +1,4 @@
 const express = require("express");
-const UserModel = require("../models/user.model");
 const { userAuth } = require("../utils/middlewares");
 const { validateEditProfileData } = require("../utils/validations");
 const profileRouter = express.Router();
