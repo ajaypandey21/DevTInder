@@ -20,4 +20,12 @@ const connectionReqSchema = new Schema({
   },
 });
 
+connectionReqSchema.pre("save", function () {
+  // middleWare to not req to suer itself
+  if (this.fromUserId.equals(this.toUserId)) {
+    throw new Error("You cant send request to yourself");
+  }
+  next();
+});
+
 module.exports = mongoose.model("ConnectionRequest", connectionReqSchema);
