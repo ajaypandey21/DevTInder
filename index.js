@@ -1,11 +1,13 @@
 const express = require("express");
 const dbConnect = require("./src/config/dataBase");
+const cors = require("cors");
 const app = express();
 var cookieParser = require("cookie-parser");
 const port = 3000;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 const profileRouter = require("./src/routes/profile.route");
 const requestRouter = require("./src/routes/request.route");
