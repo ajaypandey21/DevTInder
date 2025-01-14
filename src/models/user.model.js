@@ -39,6 +39,10 @@ const userSchema = new Schema(
       type: Number,
       min: 18,
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
     gender: {
       type: String,
       validate(value) {
