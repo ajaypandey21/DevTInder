@@ -3,16 +3,21 @@ const { userAuth } = require("../utils/middlewares");
 const paymentRouter = express.Router();
 const razorpayInstance = require("../utils/razorpay");
 const PaymentModal = require("../models/payment");
+const { membershipPlan } = require("../utils/constants");
 
 paymentRouter.post("/payment/create", userAuth, async (req, res) => {
   try {
+    const { membershipType } = req.body;
+    const { firstName, lastName, email } = req.user;
     const order = await razorpayInstance.orders.create({
-      amount: 50000,
+      amount: membershipPlan[membershipType] * 100,
       currency: "INR",
       receipt: "order_rcptid_11",
       notes: {
-        key1: "value1",
-        key2: "value2",
+        firstName,
+        lastName,
+        email,
+        membershipType: membershipType,
       },
     });
     // save to DB
@@ -27,9 +32,10 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     });
 
     const savedPayment = await payment.save();
-    res.json({ ...savedPayment.toJSON() });
+    res.json({ ...savedPayment.toJSON(), keyId: process.env.RAZORPAY_KEY_ID });
   } catch (error) {
     res.status(400).send("Error: " + error.message);
+    console.log("Error: " + error.message);
   }
 });
 module.exports = paymentRouter;
