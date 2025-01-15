@@ -8,27 +8,27 @@ const USER_SAFE_DATA = "firstName lastName photoUrl age gender about skills";
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
-    const connectionRequests = await connectionRequests
-      .find({
-        toUserId: loggedInUser._id,
-        status: "interested",
-      })
-      .populate("fromUserId", USER_SAFE_DATA);
-    res.status(200).json(connectionRequests);
+    const connectionRequests = await ConnectionRequests.find({
+      toUserId: loggedInUser._id,
+      status: "interested",
+    }).populate("fromUserId", USER_SAFE_DATA);
+    res.json({
+      message: "Data fetched successfully",
+      data: connectionRequests,
+    });
   } catch (error) {
-    res.status(400).send("Error: ", error);
+    res.status(400).send("ERROR: " + error.message);
   }
 });
 userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
-    const totalConnections = await connectionRequests
-      .find({
-        $or: [
-          { fromUserId: loggedInUser._id, status: "accepted" },
-          { toUserId: loggedInUser._id, status: "accepted" },
-        ],
-      })
+    const totalConnections = await ConnectionRequests.find({
+      $or: [
+        { fromUserId: loggedInUser._id, status: "accepted" },
+        { toUserId: loggedInUser._id, status: "accepted" },
+      ],
+    })
       .populate("fromUserId", USER_SAFE_DATA)
       .populate("toUserId", USER_SAFE_DATA);
 
